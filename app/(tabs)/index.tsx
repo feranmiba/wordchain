@@ -1,98 +1,99 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
-
-import { HelloWave } from '@/components/hello-wave';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { Link } from 'expo-router';
+import React from 'react';
+import { StyleSheet, View, Text, TouchableOpacity, useColorScheme } from 'react-native';
+import { useRouter } from 'expo-router';
+import { MotiView } from 'moti';
+import AnimatedWordChain from '../../src/shared/components/AnimatedWordChain'; // Updated to not redirect
+import { Button } from '../../src/shared/components/ui/Button';
+import { Colors, FontSize, Spacing, Radius } from '../../src/shared/constant/theme';
 
 export default function HomeScreen() {
-  return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <Link href="/modal">
-          <Link.Trigger>
-            <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-          </Link.Trigger>
-          <Link.Preview />
-          <Link.Menu>
-            <Link.MenuAction title="Action" icon="cube" onPress={() => alert('Action pressed')} />
-            <Link.MenuAction
-              title="Share"
-              icon="square.and.arrow.up"
-              onPress={() => alert('Share pressed')}
-            />
-            <Link.Menu title="More" icon="ellipsis">
-              <Link.MenuAction
-                title="Delete"
-                icon="trash"
-                destructive
-                onPress={() => alert('Delete pressed')}
-              />
-            </Link.Menu>
-          </Link.Menu>
-        </Link>
+  const router = useRouter();
+  const colorScheme = useColorScheme();
+  const isDark = colorScheme === 'dark';
+  const theme = isDark ? Colors.dark : Colors;
 
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+  return (
+    <View style={[styles.container, { backgroundColor: theme.bgPrimary }]}>
+      
+      {/* 1. THE ANIMATED LOGO AREA */}
+      <View style={styles.logoSection}>
+        {/* Note: Ensure AnimatedWordChain doesn't have router.replace inside if used here */}
+        <AnimatedWordChain /> 
+      </View>
+
+      {/* 2. DESCRIPTION & BUTTONS */}
+      <MotiView 
+        from={{ opacity: 0, translateY: 40 }}
+        animate={{ opacity: 1, translateY: 0 }}
+        transition={{ type: 'timing', duration: 800, delay: 2500 }} // Wait for logo animation
+        style={styles.content}
+      >
+        <View style={styles.description}>
+          <Text style={[styles.subtitle, { color: theme.textSecondary }]}>
+            Master the dictionary, chain the words, dominate the leaderboard and earn while playing.
+          </Text>
+        </View>
+
+        <View style={styles.buttons}>
+          <Button
+            title="Get Started"
+            onPress={() => router.push('/login')}
+            style={styles.primaryButton}
+          />
+          
+          <TouchableOpacity 
+            onPress={() => router.push('/login')}
+            style={styles.loginTrigger}
+          >
+            <Text style={styles.loginText}>
+              Already a Chainer? <Text style={{ color: Colors.primary, fontWeight: '800' }}>Login</Text>
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </MotiView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
+  container: {
+    flex: 1,
+  },
+  logoSection: {
+    flex: 0.6, // Gives more room to the animation
+    justifyContent: 'center',
     alignItems: 'center',
-    gap: 8,
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  content: {
+    flex: 0.4,
+    paddingHorizontal: Spacing.xl,
+    alignItems: 'center',
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  description: {
+    marginBottom: Spacing['2xl'],
+  },
+  subtitle: {
+    fontSize: FontSize.md,
+    textAlign: 'center',
+    lineHeight: 24,
+    fontWeight: '500',
+    maxWidth: 320,
+  },
+  buttons: {
+    width: '100%',
+    alignItems: 'center',
+  },
+  primaryButton: {
+    width: '100%',
+    height: 60,
+    borderRadius: Radius.full,
+    backgroundColor: Colors.primary,
+  },
+  loginTrigger: {
+    marginTop: Spacing.lg,
+  },
+  loginText: {
+    fontSize: FontSize.md,
+    color: Colors.textSecondary,
   },
 });
