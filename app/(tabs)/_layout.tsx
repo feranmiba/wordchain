@@ -1,53 +1,61 @@
 import { Tabs } from 'expo-router';
 import React from 'react';
-
-import { HapticTab } from '@/components/haptic-tab';
-import { IconSymbol } from '@/components/ui/icon-symbol';
-import { useColorScheme } from '@/hooks/use-color-scheme';
+import { useColorScheme } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '../../src/shared/constant/theme';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
+  const isDark = colorScheme === 'dark';
+  const theme = isDark ? Colors.dark : Colors;
 
   return (
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: Colors.primary,
-        tabBarInactiveTintColor: Colors.textSecondary,
+        tabBarInactiveTintColor: isDark ? Colors.dark.textTertiary : Colors.textTertiary,
         headerShown: false,
-        tabBarButton: HapticTab,
         tabBarStyle: {
-          backgroundColor: Colors.bgPrimary,
-          borderTopColor: Colors.border,
+          backgroundColor: isDark ? Colors.dark.bgPrimary : Colors.bgPrimary,
+          borderTopColor: isDark ? Colors.dark.border : Colors.border,
+          height: 65,
+          paddingBottom: 10,
+          paddingTop: 5,
         },
       }}>
       <Tabs.Screen
         name="index"
         options={{
           title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
-          tabBarStyle: { display: 'none' }, // Hide tab bar for home screen
+          tabBarIcon: ({ color }) => <Ionicons size={24} name="home" color={color} />,
         }}
       />
       <Tabs.Screen
-        name="game"
+        name="play"
         options={{
-          title: 'Game',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="gamecontroller.fill" color={color} />,
+          title: 'Play',
+          tabBarIcon: ({ color }) => <Ionicons size={24} name="game-controller" color={color} />,
         }}
       />
       <Tabs.Screen
-        name="leaderboard"
+        name="stats"
         options={{
-          title: 'Leaderboard',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="trophy.fill" color={color} />,
+          title: 'Stats',
+          tabBarIcon: ({ color }) => <Ionicons size={24} name="stats-chart" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="rank"
+        options={{
+          title: 'Rank',
+          tabBarIcon: ({ color }) => <Ionicons size={24} name="trophy" color={color} />,
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
           title: 'Profile',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="person.fill" color={color} />,
+          tabBarIcon: ({ color }) => <Ionicons size={24} name="person" color={color} />,
         }}
       />
     </Tabs>

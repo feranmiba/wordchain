@@ -14,7 +14,7 @@ export const LoginForm: React.FC = () => {
   const isDark = colorScheme === 'dark';
   const theme = isDark ? Colors.dark : Colors;
 
-  const [formData, setFormData] = useState<LoginRequest>({ email: '', password: '' });
+  const [formData, setFormData] = useState<LoginRequest>({ username: '', password: '' });
   const [modalVisible, setModalVisible] = useState(false);
   const [modalConfig, setModalConfig] = useState({ title: '', message: '', type: 'info' as 'success' | 'error' | 'info' });
 
@@ -26,7 +26,7 @@ export const LoginForm: React.FC = () => {
 
   const handleSubmit = () => {
     Keyboard.dismiss();
-    if (!formData.email || !formData.password) {
+    if (!formData.username || !formData.password) {
       setModalConfig({ title: 'Check am!', message: 'Abeg, fill in your details!', type: 'error' });
       setModalVisible(true);
       return;
@@ -46,8 +46,8 @@ export const LoginForm: React.FC = () => {
         <Input
           label="Email"
           placeholder="School email or Email address"
-          value={formData.email}
-          onChangeText={handleInputChange('email')}
+          value={formData.username}
+          onChangeText={handleInputChange('username')}
           autoCapitalize="none"
           // We assume Input component accepts a style or uses internal theme logic
           containerStyle={styles.inputGap}

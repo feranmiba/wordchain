@@ -8,6 +8,7 @@ import 'react-native-reanimated';
 import { useColorScheme } from 'react-native';
 import { useAuthStore } from '../src/features/auth/store/authStore';
 import { queryClient } from '../src/shared/stores/queryClient';
+import { UserProvider } from '../src/shared/context/UserContext';
 
 export const unstable_settings = {
   anchor: '(tabs)',
@@ -19,8 +20,9 @@ export default function RootLayout() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-        {isAuthenticated ? (
+      <UserProvider>
+        <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+          {isAuthenticated ? (
           // Added screenOptions here to hide headers globally
           <Stack screenOptions={{ headerShown: false }}>
             <Stack.Screen name="(tabs)" />
@@ -35,6 +37,7 @@ export default function RootLayout() {
         )}
         <StatusBar style="auto" />
       </ThemeProvider>
+      </UserProvider>
     </QueryClientProvider>
   );
 }

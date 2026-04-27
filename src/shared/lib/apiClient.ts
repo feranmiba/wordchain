@@ -1,7 +1,7 @@
 import axios, { AxiosInstance, AxiosResponse } from 'axios';
 import * as SecureStore from 'expo-secure-store';
 
-const BASE_URL = 'https://word-chain-backend-7f56.onrender.com/'; // Replace with actual API base URL
+const BASE_URL = 'https://word-chain-backend-7f56.onrender.com/'; 
 
 class ApiClient {
   private client: AxiosInstance;

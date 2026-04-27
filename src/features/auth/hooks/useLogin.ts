@@ -1,10 +1,12 @@
 import { useMutation } from '@tanstack/react-query';
 import * as SecureStore from 'expo-secure-store';
+import { useRouter } from 'expo-router';
 import { authApi } from '../api/authApi';
 import { useAuthStore } from '../store/authStore';
 
 export const useLogin = () => {
   const { login, setLoading, setError } = useAuthStore();
+  const router = useRouter();
 
   return useMutation({
     mutationFn: authApi.login,
@@ -17,11 +19,18 @@ export const useLogin = () => {
       console.log("✅ Login Success Data:", data);
 
       await SecureStore.setItemAsync('accessToken', data.access_token);
-      if (data.refresh_token) {
-        await SecureStore.setItemAsync('refreshToken', data.refresh_token);
-      }
-      login(data.user);
+      
+      // Store user data
+      const userData = {
+        first_name: data.first_name,
+        // Default values for now, will be updated by real data later
+        level: '100L',
+        rank: 'Novice',
+      };
+      
+      login(userData);
       setLoading(false);
+      router.replace('/(tabs)');
     },
     onError: (error: any) => {
       setLoading(false);
